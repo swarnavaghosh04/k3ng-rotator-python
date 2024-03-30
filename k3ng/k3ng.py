@@ -21,6 +21,11 @@ class TLE:
     line_one: str
     line_two: str
 
+    def __post_init__(self):
+        self.title = self.title.strip()
+        self.line_one = self.line_one.strip()
+        self.line_two = self.line_two.strip()
+
 
 @dataclass
 class Satellite:
@@ -336,6 +341,16 @@ class K3NG:
             logging.critical("TLE not loaded")
             logging.info(ret)
             raise RuntimeError("TLE not loaded")
+
+    def load_tle_from_file(self, tle_file: str) -> Satellite:
+        with open(tle_file, "r") as file:
+            tle_file_data = file.readlines()
+
+        sat_tle = TLE(tle_file_data[0], tle_file_data[1], tle_file_data[2])
+        sat = Satellite(0, sat_tle)
+        self.load_tle(sat)
+
+        return sat
 
     def read_tles(self) -> list[TLE]:
         ret = self.query("\\@")

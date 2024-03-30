@@ -1,20 +1,14 @@
 import logging
 from argparse import ArgumentParser
 
-from k3ng import K3NG, TLE, Satellite
+from k3ng import K3NG
 
 
 def program_tle_from_file(tle_file: str, ser_port: str, track: bool) -> None:
     rot = K3NG(ser_port)
 
-    with open(tle_file, "r") as file:
-        tle_file_data = file.readlines()
-
-    sat_tle = TLE(tle_file_data[0], tle_file_data[1], tle_file_data[2])
-
-    sat = Satellite(0, sat_tle)
     rot.set_time()
-    rot.load_tle(sat)
+    sat = rot.load_tle_from_file(tle_file)
     rot.check_time()
     rot.select_satellite(sat)
     rot.enable_tracking()
