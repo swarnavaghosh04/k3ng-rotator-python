@@ -6,7 +6,7 @@ from k3ng import K3NG
 
 def toggle_tracking(rot: K3NG) -> None:
     rot.get_trackable()
-    if "TRACKING ENABLED" in rot.get_tracking_status():
+    if rot.get_tracking_status().is_tracking:
         rot.disable_tracking()
     else:
         rot.enable_tracking()

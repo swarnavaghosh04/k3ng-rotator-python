@@ -1,24 +1,31 @@
 import logging
 from argparse import ArgumentParser
 
+import rpyc  # type: ignore
 from IPython import get_ipython  # type: ignore
 
-from k3ng import K3NG
+from k3ng import K3NGService
 
 parser = ArgumentParser(
-    prog="ipython_start",
-    description="Configures an iPython shell to communicate to the rotator",
+    prog="ipython_start_rpc",
+    description="Configures an iPython shell to communicate to the rotator over RPC",
 )
 parser.add_argument(
-    "port",
-    help="Serial port connected to an Arduino (typically /dev/ttyACM0)",
+    "rpc_port",
+    type=int,
+    nargs="?",
+    default=K3NGService.DEFAULT_PORT,
+    help="Port of RPC server on localhost",
 )
 
 logging.basicConfig(level=logging.INFO)
 
 args = parser.parse_args()
 
-rot = K3NG(args.port)
+
+rot = rpyc.connect(
+    "localhost", args.rpc_port, config={"allow_public_attrs": True}
+).root.K3NG
 
 try:
     ipython = get_ipython()

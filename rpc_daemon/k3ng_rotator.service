@@ -1,0 +1,14 @@
+# Source for a lot of this: https://github.com/torfsen/python-systemd-tutorial
+
+[Unit]
+Description=K3NG Rotator RPC Service
+
+[Service]
+ExecStart=/usr/bin/python3 /usr/local/lib/k3ng_rotator/rpc_daemon.py /dev/ttyRotator
+Environment=PYTHONUNBUFFERED=1
+Restart=on-failure
+Type=notify
+User=k3ng_rotator
+
+[Install]
+WantedBy=default.target
